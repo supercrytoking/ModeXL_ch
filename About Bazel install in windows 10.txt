@@ -1,0 +1,184 @@
+Installing Bazel on Windows
+
+bookmark_border
+REPORT AN ISSUEopen_in_new VIEW SOURCEopen_in_new
+This page describes the requirements and steps to install Bazel on Windows. It also includes troubleshooting and other ways to install Bazel, such as using Chocolatey or Scoop.
+
+Installing Bazel
+This section covers the prerequisites, environment setup, and detailed steps during installation on Windows.
+
+Check your system
+Recommended: 64 bit Windows 10, version 1703 (Creators Update) or newer
+
+To check your Windows version:
+
+Click the Start button.
+Type winver in the search box and press Enter.
+You should see the About Windows box with your Windows version information.
+Install the prerequisites
+Microsoft Visual C++ Redistributable
+Download Bazel
+Recommended: Use Bazelisk
+
+Alternatively you can:
+
+Download the Bazel binary (bazel-version-windows-x86_64.exe) from GitHub.
+Install Bazel from Chocolatey
+Install Bazel from Scoop
+Build Bazel from source
+Set up your environment
+To make Bazel easily accessible from command prompts or PowerShell by default, you can rename the Bazel binary to bazel.exe and add it to your default paths.
+
+
+set PATH=%PATH%;path to the Bazel binary
+You can also change your system PATH environment variable to make it permanent. Check out how to set environment variables.
+
+Done
+"Success: You've installed Bazel."
+
+To check the installation is correct, try to run:
+
+
+bazel version
+Next, you can check out more tips and guidance here:
+
+Installing compilers and language runtimes
+Troubleshooting
+Best practices on Windows
+Tutorials
+Installing compilers and language runtimes
+Depending on which languages you want to build, you will need:
+
+MSYS2 x86_64
+
+MSYS2 is a software distro and building platform for Windows. It contains Bash and common Unix tools (like grep, tar, git).
+
+You will need MSYS2 to build, test, or run targets that depend on Bash. Typically these are genrule, sh_binary, sh_test, but there may be more (such as Starlark rules). Bazel shows an error if a build target needs Bash but Bazel could not locate it.
+
+Common MSYS2 packages
+
+You will likely need these to build and run targets that depend on Bash. MSYS2 does not install these tools by default, so you need to install them manually. Projects that depend on Bash tools in PATH need this step (for example TensorFlow).
+
+Open the MSYS2 terminal and run this command:
+
+
+pacman -S zip unzip patch diffutils git
+Optional: If you want to use Bazel from CMD or Powershell and still be able to use Bash tools, make sure to add MSYS2_INSTALL_PATH/usr/bin to your PATH environment variable.
+
+Build Tools for Visual Studio 2019
+
+You will need this to build C++ code on Windows.
+
+Also supported:
+
+Visual C++ Build Tools 2017 (or newer) and Windows 10 SDK
+Java SE Development Kit 11 (JDK) for Windows x64
+
+You will need this to build Java code on Windows.
+
+Also supported: Java 8, 9, and 10
+
+Python 3.6 for Windows x86-64
+
+You will need this to build Python code on Windows.
+
+Also supported: Python 2.7 or newer for Windows x86-64
+
+Troubleshooting
+Bazel does not find Bash or bash.exe
+Possible reasons:
+
+you installed MSYS2 not under the default install path
+
+you installed MSYS2 i686 instead of MSYS2 x86_64
+
+you installed MSYS instead of MSYS2
+
+Solution:
+
+Ensure you installed MSYS2 x86_64.
+
+If that doesn't help:
+
+Go to Start Menu > Settings.
+
+Find the setting "Edit environment variables for your account"
+
+Look at the list on the top ("User variables for <username>"), and click the "New..." button below it.
+
+For "Variable name", enter BAZEL_SH
+
+Click "Browse File..."
+
+Navigate to the MSYS2 directory, then to usr\bin below it.
+
+For example, this might be C:\msys64\usr\bin on your system.
+
+Select the bash.exe or bash file and click OK
+
+The "Variable value" field now has the path to bash.exe. Click OK to close the window.
+
+Done.
+
+If you open a new cmd.exe or PowerShell terminal and run Bazel now, it will find Bash.
+
+Bazel does not find Visual Studio or Visual C++
+Possible reasons:
+
+you installed multiple versions of Visual Studio
+
+you installed and removed various versions of Visual Studio
+
+you installed various versions of the Windows SDK
+
+you installed Visual Studio not under the default install path
+
+Solution:
+
+Go to Start Menu > Settings.
+
+Find the setting "Edit environment variables for your account"
+
+Look at the list on the top ("User variables for <username>"), and click the "New..." button below it.
+
+For "Variable name", enter BAZEL_VC
+
+Click "Browse Directory..."
+
+Navigate to the VC directory of Visual Studio.
+
+For example, this might be C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC on your system.
+
+Select the VC folder and click OK
+
+The "Variable value" field now has the path to VC. Click OK to close the window.
+
+Done.
+
+If you open a new cmd.exe or PowerShell terminal and run Bazel now, it will find Visual C++.
+
+Other ways to install Bazel
+Using Chocolatey
+Install the Chocolatey package manager
+
+Install the Bazel package:
+
+
+choco install bazel
+This command will install the latest available version of Bazel and its dependencies, such as the MSYS2 shell. This will not install Visual C++ though.
+
+See Chocolatey installation and package maintenance guide for more information about the Chocolatey package.
+
+Using Scoop
+Install the Scoop package manager using the following PowerShell command:
+
+
+iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+Install the Bazel package:
+
+
+scoop install bazel
+See Scoop installation and package maintenance guide for more information about the Scoop package.
+
+Build from source
+To build Bazel from scratch instead of installing, see Compiling from source.

@@ -1,0 +1,57 @@
+MediaPipe can be developed using various IDEs including:
+
+Visual Studio Code: VSC is a cross-platform, open-source code editor known for its speed and simplicity in use. It provides features like debugging support, syntax highlighting, and customizing the interface as per the user's preference.
+
+Android Studio: MediaPipe can also be developed through Google's official IDE for developing Android apps, Android Studio. It offers tools for designing layouts, connecting to databases, and debugging the code.
+
+JetBrains' PyCharm Professional edition: If you wish to develop MediaPipe on Python, then PyCharm could be an excellent choice for you. PyCharm is one of the most popular Python IDEs that offers advanced coding assistance, error highlights, and a range of tools for refactoring your code.
+
+Eclipse: Eclipse is a widely used IDE for many programming languages including Java, C++, and Python. MediaPipe can also be developed in Eclipse. It offers a comprehensive set of development tools and debugging features for developers.
+
+These are some of the popular IDEs used for MediaPipe development, but you can choose any IDE based on your preference or the specific nature of your project.
+
+
+
+Step By Step
+
+Here is a step by step guide to get started with Mediapipe development:
+
+Install Necessary Software:
+Before beginning, you'll need some software installed on your machine. You can use either Windows or Mac OS X as an operating system. The following are the required software:
+Python
+Visual Studio (for C++ development)
+Git
+Clone the Mediapipe Repository:
+Once you have all the necessary software installed on your computer, clone the Mediapipe repository from Github using the following command:
+git clone https://github.com/google/mediapipe.git
+This command will create a "mediapipe" directory in your current working directory.
+
+Build the Examples:
+You can build the examples to see how to use certain pipelines and modules. To build the examples, open a terminal window and navigate to the mediapipe directory. Then execute the following commands:
+Copy
+Insert
+New
+bazel build -c opt --define MEDIAPIPE_DISABLE_GPU=1 mediapipe/examples/desktop/hand_tracking:hand_tracking_cpu 
+This builds the hand tracking example without GPU support.
+Then run the example using this command:
+
+
+GLOG_logtostderr=1 bazel-bin/mediapipe/examples/desktop/hand_tracking/hand_tracking_cpu --calculator_graph_config_file=mediapipe/graphs/hand_tracking/hand_tracking_desktop_live.pbtxt 
+Create Your Own Application:
+After building and testing the examples, you can start developing your own application. To create an application that uses Mediapipe libraries, you need to follow these steps:
+Define a graph for the GStreamer pipeline
+Write input and output callbacks to interact with the image data
+Implement the Main Loop for running the pipeline
+Build and run your application.
+To learn more about creating your own application, you can refer to the documentation provided in the mediapipe/docs directory.
+
+Submit Your Pipeline to the Mediapipe Community:
+Once your pipeline is ready, you can submit it to the Mediapipe community for use by other developers. To submit a pipeline, follow these steps:
+Fork the Github repository
+Create a new pipeline directory
+Add the pipeline code
+Write a README.md file detailing the pipeline usage
+Submit a pull request
+This will allow others to use and test your pipeline.
+
+These are the basic steps to get started with developing Mediapipe applications. Good luck!

@@ -1,0 +1,44 @@
+To install Bazel-cli, follow the steps below for the relevant operating system.
+
+For macOS and Linux users:
+
+Open a terminal window.
+Run the following command to download the latest Bazel installer script:
+Copy
+Insert
+New
+curl -LO https://github.com/bazelbuild/bazel/releases/latest/download/bazel-<latest-version>-installer-darwin-x86_64.sh
+Note: Replace <latest-version> with the version of Bazel that you want to install (e.g., 4.0.0).
+
+Make the installer script executable by running the following command:
+Copy
+Insert
+New
+chmod +x bazel-<latest-version>-installer-darwin-x86_64.sh
+Note: Again, replace <latest-version> with the version of Bazel that you want to install.
+
+Run the installer script using sudo privileges as follows:
+Copy
+Insert
+New
+sudo ./bazel-<latest-version>-installer-darwin-x86_64.sh --user
+Once the installation is complete, you should see the following message: Bazel installer completed successfully!.
+
+Finally, add Bazel to your PATH environment variable by adding the following line to your shell profile (e.g., ~/.bashrc or ~/.zshrc):
+Copy
+Insert
+New
+export PATH="$PATH:$HOME/bin"
+For Windows users:
+
+Download the latest Bazel installer .exe file from here.
+Double-click the downloaded .exe file to launch the installer.
+Follow the instructions in the installer wizard to complete the installation.
+Add Bazel to your PATH environment variable by adding the following line to the Path variable in Environment variables:
+Copy
+Insert
+New
+C:\Program Files\Bazel\<version>\
+Note: Replace <version> with the version of Bazel that you have installed (e.g., 4.0.0).
+
+Once Bazel has been successfully installed and added to your PATH, you can check if it is installed correctly by running bazel version.

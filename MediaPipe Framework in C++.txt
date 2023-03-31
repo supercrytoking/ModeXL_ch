@@ -1,0 +1,120 @@
+MediaPipe Framework in C++
+
+bookmark_border
+Please follow instructions below to build C++ command-line example apps with MediaPipe Framework. To learn more about these example apps, start from Hello World! in C++.
+
+Building C++ command-line example apps
+Option 1: Running on CPU
+To build, for example, the C++ example app of the legacy MediaPipe Hand Detection solution with CPU, run:
+
+
+bazel build -c opt --define MEDIAPIPE_DISABLE_GPU=1 mediapipe/examples/desktop/hand_tracking:hand_tracking_cpu
+To run the application:
+
+
+GLOG_logtostderr=1 bazel-bin/mediapipe/examples/desktop/hand_tracking/hand_tracking_cpu \
+  --calculator_graph_config_file=mediapipe/graphs/hand_tracking/hand_tracking_desktop_live.pbtxt
+This will open up your webcam as long as it is connected and on. Any errors is likely due to your webcam being not accessible.
+
+Option 2: Running on GPU
+Note: This currently works only on Linux, and please first follow OpenGL ES Setup on Linux Desktop.
+To build, for example, the C++ example app of the legacy MediaPipe Hand Detection solution with GPU, run:
+
+
+bazel build -c opt --copt -DMESA_EGL_NO_X11_HEADERS --copt -DEGL_NO_X11 \
+  mediapipe/examples/desktop/hand_tracking:hand_tracking_gpu
+To run the application:
+
+
+GLOG_logtostderr=1 bazel-bin/mediapipe/examples/desktop/hand_tracking/hand_tracking_gpu \
+  --calculator_graph_config_file=mediapipe/graphs/hand_tracking/hand_tracking_desktop_live_gpu.pbtxt
+This will open up your webcam as long as it is connected and on. Any errors is likely due to your webcam being not accessible, or GPU drivers not setup properly.
+
+Hello World! in C++
+
+bookmark_border
+Ensure you have a working version of MediaPipe Framework. See installation instructions.
+
+To run the hello world example:
+
+
+$ git clone https://github.com/google/mediapipe.git
+$ cd mediapipe
+
+$ export GLOG_logtostderr=1
+# Need bazel flag 'MEDIAPIPE_DISABLE_GPU=1' as desktop GPU is not supported currently.
+$ bazel run --define MEDIAPIPE_DISABLE_GPU=1 \
+    mediapipe/examples/desktop/hello_world:hello_world
+
+# It should print 10 rows of Hello World!
+# Hello World!
+# Hello World!
+# Hello World!
+# Hello World!
+# Hello World!
+# Hello World!
+# Hello World!
+# Hello World!
+# Hello World!
+# Hello World!
+The hello world example uses a simple MediaPipe graph in the PrintHelloWorld() function, defined in a CalculatorGraphConfig proto.
+
+
+absl::Status PrintHelloWorld() {
+  // Configures a simple graph, which concatenates 2 PassThroughCalculators.
+  CalculatorGraphConfig config = ParseTextProtoOrDie<CalculatorGraphConfig>(R"(
+    input_stream: "in"
+    output_stream: "out"
+    node {
+      calculator: "PassThroughCalculator"
+      input_stream: "in"
+      output_stream: "out1"
+    }
+    node {
+      calculator: "PassThroughCalculator"
+      input_stream: "out1"
+      output_stream: "out"
+    }
+  )");
+You can visualize this graph using MediaPipe Visualizer by pasting the CalculatorGraphConfig content below into the visualizer. See here for help on the visualizer.
+
+
+    input_stream: "in"
+    output_stream: "out"
+    node {
+      calculator: "PassThroughCalculator"
+      input_stream: "in"
+      output_stream: "out1"
+    }
+    node {
+      calculator: "PassThroughCalculator"
+      input_stream: "out1"
+      output_stream: "out"
+    }
+This graph consists of 1 graph input stream (in) and 1 graph output stream (out), and 2 PassThroughCalculators connected serially.
+
+hello_world graph
+
+Before running the graph, an OutputStreamPoller object is connected to the output stream in order to later retrieve the graph output, and a graph run is started with StartRun.
+
+
+CalculatorGraph graph;
+MP_RETURN_IF_ERROR(graph.Initialize(config));
+MP_ASSIGN_OR_RETURN(OutputStreamPoller poller,
+                    graph.AddOutputStreamPoller("out"));
+MP_RETURN_IF_ERROR(graph.StartRun({}));
+The example then creates 10 packets (each packet contains a string "Hello World!" with Timestamp values ranging from 0, 1, ... 9) using the MakePacket function, adds each packet into the graph through the in input stream, and finally closes the input stream to finish the graph run.
+
+
+for (int i = 0; i < 10; ++i) {
+  MP_RETURN_IF_ERROR(graph.AddPacketToInputStream("in",
+                     MakePacket<std::string>("Hello World!").At(Timestamp(i))));
+}
+MP_RETURN_IF_ERROR(graph.CloseInputStream("in"));
+Through the OutputStreamPoller object the example then retrieves all 10 packets from the output stream, gets the string content out of each packet and prints it to the output log.
+
+
+mediapipe::Packet packet;
+while (poller.Next(&packet)) {
+  LOG(INFO) << packet.Get<string>();
+}
